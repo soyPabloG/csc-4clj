@@ -10,9 +10,20 @@
 ;;
 ;; Tags: primes
 
+(defn prime? [n]
+  (nil?
+    (some #(zero? (mod n %))
+          (range 2 n))))
+
+(defn primes
+  ([] (cons 2 (lazy-seq (primes 2))))
+  ([n]
+    (let [new-prime (first (filter prime? (drop (inc n) (range))))]
+      (cons new-prime (lazy-seq (primes new-prime))))))
+
 (def __
-  (fn []
-    ,,,))
+  (fn [n]
+    (take n (primes))))
 
 
 ;;;;;;;;;;;
