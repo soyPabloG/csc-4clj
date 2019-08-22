@@ -10,8 +10,11 @@
 ;; Tags: seqs
 
 (def __
-  (fn []
-    ,,,))
+  (fn [coll]
+    (let [[f s & r] coll]
+      (if (nil? r)
+        f
+        (recur (next coll))))))
 
 
 ;;;;;;;;;;;
