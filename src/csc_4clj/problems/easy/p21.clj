@@ -13,8 +13,11 @@
 
 
 (def __
-  (fn []
-    ,,,))
+  (fn [coll index]
+    (let [[f & r] coll]
+      (if (= index 0)
+        f
+        (recur r (dec index))))))
 
 
 ;;;;;;;;;;;
