@@ -13,8 +13,14 @@
 
 
 (def __
-  (fn []
-    ,,,))
+  (fn [coll]
+    (if (empty? coll)
+      0
+      (loop [[f & r] coll
+             count   1]
+        (if (nil? r)
+          count
+          (recur r (inc count)))))))
 
 
 ;;;;;;;;;;;
