@@ -12,8 +12,13 @@
 ;; Tags: partial-functions
 
 (def __
-  (fn []
-    ,,,))
+  (fn [f]
+    (fn [& args]
+      (loop [f'       f
+             rem-args args]
+        (if (seq rem-args)
+          (recur (f' (first rem-args)) (next rem-args))
+          f')))))
 
 
 ;;;;;;;;;;;
@@ -38,4 +43,3 @@
              (fn [b]
                (* a b))))
        5 5))
-
