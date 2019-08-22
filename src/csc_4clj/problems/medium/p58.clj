@@ -11,10 +11,25 @@
 ;;
 ;; Special restrictions: comp
 
+;(defn compose [f g]
+;  (fn [& args]
+;    (f (apply g args))))
+
+;(def __
+;  (fn [& fns]
+;    (reduce (fn [acc-fn f]
+;              (compose f acc-fn))
+;              (reverse fns))))
+
+;(def __
+;  (fn [& fns]
+;    (reduce (fn [acc-fn f]
+;              (compose acc-fn f))
+;              fns)))
 
 (def __
-  (fn []
-    ,,,))
+  (fn [& fns]
+    (reduce (fn [f g] #(f (apply g %&))) fns)))
 
 
 ;;;;;;;;;;;
