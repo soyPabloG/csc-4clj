@@ -11,15 +11,22 @@
 ;;
 ;; Tags: partial-functions
 
+;(def __
+;  (fn [f]
+;    (fn [& args]
+;      (loop [f'       f
+;             rem-args args]
+;        (if (seq rem-args)
+;          (recur (f' (first rem-args)) (next rem-args))
+;          f')))))
+
 (def __
   (fn [f]
     (fn [& args]
-      (loop [f'       f
-             rem-args args]
-        (if (seq rem-args)
-          (recur (f' (first rem-args)) (next rem-args))
-          f')))))
-
+      (reduce (fn [f x]
+                (f x))
+              (f (first args))
+              (next args)))))
 
 ;;;;;;;;;;;
 ;; Tests ;;
