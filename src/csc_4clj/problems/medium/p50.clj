@@ -10,8 +10,8 @@
 ;; Tags: seqs
 
 (def __
-  (fn []
-    ,,,))
+  (fn [coll]
+    (vals (group-by type coll))))
 
 
 ;;;;;;;;;;;
