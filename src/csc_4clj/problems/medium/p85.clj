@@ -10,8 +10,12 @@
 ;; Tags: set-theory
 
 (def __
-  (fn []
-    ,,,))
+  (fn [set]
+    (if (empty? set)
+      #{#{}}
+      (let [[s & ss] set
+            sss      (__ ss)]
+        (clojure.set/union sss (map #(conj % s) sss))))))
 
 
 ;;;;;;;;;;;
