@@ -16,8 +16,16 @@
 ;; Tags: seqs, higher-order-functions
 
 (def __
-  (fn []
-    ,,,))
+  (fn [n p-fn coll]
+    (loop [n        n
+           p-fn     p-fn
+           [f & r]  coll
+           solution []]
+      (if (p-fn f)
+        (if (= n 1)
+          solution
+          (recur (- n 1) p-fn r (conj solution f)))
+        (recur n p-fn r (conj solution f))))))
 
 
 ;;;;;;;;;;;
@@ -29,7 +37,7 @@
          [2 3 5 7 11 13 17 19 23]))
 
 (= ["this" "is" "a" "sentence"]
-   (__ 3 #(some #{\\i} %)
+   (__ 3 #(some #{\i} %)
          ["this" "is" "a" "sentence" "i" "wrote"]))
 
 (= ["this" "is"]
