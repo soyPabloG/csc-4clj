@@ -15,18 +15,24 @@
 ;;
 ;; Tags: seqs, higher-order-functions
 
+;(def __
+;  (fn [n p-fn coll]
+;    (loop [n        n
+;           p-fn     p-fn
+;           [f & r]  coll
+;           solution []]
+;      (if (p-fn f)
+;        (if (= n 1)
+;          solution
+;          (recur (- n 1) p-fn r (conj solution f)))
+;        (recur n p-fn r (conj solution f))))))
+
 (def __
   (fn [n p-fn coll]
-    (loop [n        n
-           p-fn     p-fn
-           [f & r]  coll
-           solution []]
+    (let [[f & r] coll]
       (if (p-fn f)
-        (if (= n 1)
-          solution
-          (recur (- n 1) p-fn r (conj solution f)))
-        (recur n p-fn r (conj solution f))))))
-
+        (when (> n 1) (lazy-seq (cons f (__ (- n 1) p-fn r))))
+        (lazy-seq (cons f (__ n p-fn r)))))))
 
 ;;;;;;;;;;;
 ;; Tests ;;
