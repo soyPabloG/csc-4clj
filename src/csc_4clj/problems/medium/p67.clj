@@ -15,11 +15,16 @@
     (some #(zero? (mod n %))
           (range 2 n))))
 
+(defn next-prime [n]
+  (let [succ-n (inc n)]
+    (if (prime? succ-n)
+      succ-n
+      (recur succ-n))))
+
 (defn primes
-  ([] (cons 2 (lazy-seq (primes 2))))
-  ([n]
-    (let [new-prime (first (filter prime? (drop (inc n) (range))))]
-      (cons new-prime (lazy-seq (primes new-prime))))))
+  ([] (lazy-seq (cons 2 (primes (next-prime 2)))))
+  ([p]
+   (lazy-seq (cons p (primes (next-prime p))))))
 
 (def __
   (fn [n]
