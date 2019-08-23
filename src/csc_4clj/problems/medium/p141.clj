@@ -31,9 +31,16 @@
 ;;
 ;; Tags: game, cards
 
+(defn winner [cards lead-suit]
+  (last (sort-by :rank (filter #(= lead-suit (:suit %)) cards))))
+
 (def __
-  (fn []
-    ,,,))
+  (fn [trump-suit]
+    (fn [cards]
+      (let [winner-by-trump (winner cards trump-suit)]
+        (if (nil? winner-by-trump)
+          (winner cards (:suit (first cards)))
+          winner-by-trump)))))
 
 
 ;;;;;;;;;;;
