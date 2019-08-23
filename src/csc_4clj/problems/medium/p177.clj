@@ -9,9 +9,28 @@
 ;;
 ;; Tags: parsing
 
+(def brackets-classes {\[ :square \] :square \( :round \) :round \{ :curly \} :curly})
+
 (def __
-  (fn []
-    ,,,))
+  (fn [string]
+    (loop [stack   []
+           [f & r] string]
+      (let [char-class (get brackets-classes f)]
+        (cond
+          (nil? f) (empty? stack)
+          (= f \[) (recur (conj stack char-class) r)
+          (= f \]) (if (= char-class (peek stack))
+                     (recur (pop stack) r)
+                     false)
+          (= f \() (recur (conj stack char-class) r)
+          (= f \)) (if (= char-class (peek stack))
+                     (recur (pop stack) r)
+                     false)
+          (= f \{) (recur (conj stack char-class) r)
+          (= f \}) (if (= char-class (peek stack))
+                     (recur (pop stack) r)
+                     false)
+          :else (recur stack r))))))
 
 
 ;;;;;;;;;;;
@@ -22,7 +41,7 @@
 
 (__ "class Test {
       public static void main(String[] args) {
-        System.out.println(\\"Hello world.\\");
+        System.out.println(\"Hello world.\");
       }
     }")
 
