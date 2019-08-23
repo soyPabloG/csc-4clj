@@ -13,8 +13,10 @@
 
 
 (def __
-  (fn []
-    ,,,))
+  (fn [coll]
+    (reduce #(assoc %1 (key %2) (count (val %2)))
+            {}
+            (group-by identity coll))))
 
 
 ;;;;;;;;;;;
