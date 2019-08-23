@@ -6,36 +6,36 @@
 ;;
 ;; Description:
 ;; <p>
-;;In what follows, <code>m</code>, <code>n</code>, <code>s</code>, <code>t</code> 
-;;denote nonnegative integers, <code>f</code> denotes a function that accepts two 
+;;In what follows, <code>m</code>, <code>n</code>, <code>s</code>, <code>t</code>
+;;denote nonnegative integers, <code>f</code> denotes a function that accepts two
 ;;arguments and is defined for all nonnegative integers in both arguments.
 ;;</p>
 ;;
 ;;<p>
-;;In mathematics, the function <code>f</code> can be interpreted as an infinite 
+;;In mathematics, the function <code>f</code> can be interpreted as an infinite
 ;;<a href="http://en.wikipedia.org/wiki/Matrix_%28mathematics%29">matrix</a>
-;;with infinitely many rows and columns that, when written, looks like an ordinary 
-;;matrix but its rows and columns cannot be written down completely, so are terminated 
-;;with ellipses. In Clojure, such infinite matrix can be represented 
-;;as an infinite lazy sequence of infinite lazy sequences, 
+;;with infinitely many rows and columns that, when written, looks like an ordinary
+;;matrix but its rows and columns cannot be written down completely, so are terminated
+;;with ellipses. In Clojure, such infinite matrix can be represented
+;;as an infinite lazy sequence of infinite lazy sequences,
 ;;where the inner sequences represent rows.
-;;</p> 
+;;</p>
 ;;
 ;;<p>
 ;;Write a function that accepts 1, 3 and 5 arguments
 ;;<ul>
 ;;<li>
-;;with the argument <code>f</code>, it returns the infinite matrix <b>A</b>  
-;;that has the entry in the <code>i</code>-th row and the <code>j</code>-th column 
+;;with the argument <code>f</code>, it returns the infinite matrix <b>A</b>
+;;that has the entry in the <code>i</code>-th row and the <code>j</code>-th column
 ;;equal to <code>f(i,j)</code> for <code>i,j = 0,1,2,...</code>;</li>
 ;;<li>
-;;with the arguments <code>f</code>, <code>m</code>, <code>n</code>, it returns 
-;;the infinite matrix <b>B</b> that equals the remainder of the matrix <b>A</b> 
+;;with the arguments <code>f</code>, <code>m</code>, <code>n</code>, it returns
+;;the infinite matrix <b>B</b> that equals the remainder of the matrix <b>A</b>
 ;;after the removal of the first <code>m</code> rows and the first <code>n</code> columns;</li>
 ;;<li>
 ;;with the arguments <code>f</code>, <code>m</code>, <code>n</code>, <code>s</code>, <code>t</code>,
-;;it returns the finite s-by-t matrix that consists of the first t entries of each of the first 
-;;<code>s</code> rows of the matrix <b>B</b> or, equivalently, that consists of the first s entries 
+;;it returns the finite s-by-t matrix that consists of the first t entries of each of the first
+;;<code>s</code> rows of the matrix <b>B</b> or, equivalently, that consists of the first s entries
 ;;of each of the first <code>t</code> columns of the matrix <b>B</b>.</li>
 ;;</ul>
 ;;</p>
@@ -45,9 +45,20 @@
 ;; Special restrictions: for, range, iterate, repeat, cycle, drop
 
 
+(defn column
+  ([f r] (lazy-seq (cons (f r 0) (column f r 1))))
+  ([f r c] (lazy-seq (cons (f r c) (column f r (inc c))))))
+
+(defn row
+  ([f] (lazy-seq (cons (column f 0) (row f 1))))
+  ([f r] (lazy-seq (cons (column f r) (row f (inc r)))))
+  ([f r c] (lazy-seq (cons (column f r c) (row f (inc r) c)))))
+
 (def __
-  (fn []
-    ,,,))
+  (fn
+    ([f] (row f))
+    ([f m n] (row f m n))
+    ([f m n s t] (map (partial take t) (take s (__ f m n))))))
 
 
 ;;;;;;;;;;;
