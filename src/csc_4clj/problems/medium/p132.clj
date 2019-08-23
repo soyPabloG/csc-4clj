@@ -10,8 +10,14 @@
 ;; Tags: seqs, core-functions
 
 (def __
-  (fn []
-    ,,,))
+  (fn [p-fn item coll]
+    (let [[f s & r] coll]
+      (cond
+        (nil? f) nil
+        (nil? s) [f]
+        :else (if (p-fn f s)
+                (lazy-seq (cons f (cons item (__ p-fn item (next coll)))))
+                (lazy-seq (cons f (__ p-fn item (next coll)))))))))
 
 
 ;;;;;;;;;;;
