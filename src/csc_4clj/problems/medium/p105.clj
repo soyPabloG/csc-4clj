@@ -10,9 +10,19 @@
 ;; Tags: maps, seqs
 
 (def __
-  (fn []
-    ,,,))
-
+  (fn [coll]
+    (loop [[f & r]  (let [seen (atom true)]
+                      (partition-by #(when (keyword? %)
+                                    (reset! seen (not @seen)))
+                                    coll))
+           solution {}]
+      (if (nil? f)
+        solution
+        (let [key     (first f)
+              pos-val (first r)]
+          (if (or (keyword? (first pos-val)) (nil? pos-val))
+            (recur r (assoc solution key []))
+            (recur (next r) (assoc solution key pos-val))))))))
 
 ;;;;;;;;;;;
 ;; Tests ;;
