@@ -7,11 +7,18 @@
 ;; Description:
 ;; Write a function that takes a sequence of integers and returns a sequence of "intervals".  Each interval is a a vector of two integers, start and end, such that all integers between start and end (inclusive) are contained in the input sequence.
 ;;
-;; Tags: 
+;; Tags:
 
 (def __
-  (fn []
-    ,,,))
+  (fn [coll]
+    (map
+      #(vector (first %) (last %))
+      (let [last-seen (atom 0)]
+        (partition-by
+          #(if (<= (- % @last-seen) 1)
+             (do (reset! last-seen %) true)
+             (do (reset! last-seen %) false))
+          (sort coll))))))
 
 
 ;;;;;;;;;;;
@@ -28,4 +35,3 @@
 
 (= (__ [19 4 17 1 3 10 2 13 13 2 16 4 2 15 13 9 6 14 2 11])
        [[1 4] [6 6] [9 11] [13 17] [19 19]])
-
