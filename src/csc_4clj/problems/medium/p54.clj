@@ -12,16 +12,21 @@
 ;; Special restrictions: partition, partition-all
 
 
+;(def __
+;  (fn [n coll]
+;    (loop [[f & r :as rem-coll]  coll
+;           acc                   []
+;           solution              []]
+;      (println coll)
+;      (cond
+;        (= (count acc) n) (recur rem-coll [] (conj solution acc))
+;        (nil? f) solution
+;        :else (recur r (conj acc f) solution)))))
+
 (def __
   (fn [n coll]
-    (loop [[f & r :as rem-coll]  coll
-           acc                   []
-           solution              []]
-      (println coll)
-      (cond
-        (= (count acc) n) (recur rem-coll [] (conj solution acc))
-        (nil? f) solution
-        :else (recur r (conj acc f) solution)))))
+    (when (>= (count coll) n)
+      (lazy-seq (cons (take n coll) (__ n (drop n coll)))))))
 
 ;;;;;;;;;;;
 ;; Tests ;;
