@@ -10,8 +10,11 @@
 ;; Tags: sequences
 
 (def __
-  (fn []
-    ,,,))
+  (fn [init-v & fns]
+    ((fn oscilrate
+       ([] (lazy-seq (cons init-v (oscilrate init-v (flatten (repeat fns))))))
+       ([v fns] (let [new-v ((first fns) v)]
+                  (lazy-seq (cons new-v (oscilrate new-v (next fns))))))))))
 
 
 ;;;;;;;;;;;
@@ -23,4 +26,3 @@
 (= (take 5 (__ 3 #(- % 3) #(+ 5 %))) [3 0 5 2 7])
 
 (= (take 12 (__ 0 inc dec inc dec inc)) [0 1 0 1 0 1 2 1 2 1 2 3])
-
