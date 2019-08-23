@@ -13,9 +13,10 @@
 
 
 (def __
-  (fn []
-    ,,,))
-
+  (fn [coll]
+    (reduce #(if (some (partial = %2) %1) %1 (conj %1 %2))
+            []
+            coll)))
 
 ;;;;;;;;;;;
 ;; Tests ;;
