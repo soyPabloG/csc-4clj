@@ -9,9 +9,20 @@
 ;;
 ;; Tags: math
 
+(defn digits [n]
+  (->> n
+       str
+       (map #(Character/getNumericValue %))))
+
 (def __
-  (fn []
-    ,,,))
+  (fn [n]
+    (let [n             (digits n)
+          [f-dig l-dig] (split-at (/ (count n) 2) n)]
+      (=
+        (apply + (if (odd? (count n))
+                   (drop-last f-dig)
+                   f-dig))
+        (apply + l-dig)))))
 
 
 ;;;;;;;;;;;
@@ -33,4 +44,4 @@
 (= true (__ 89089))
 
 (= (take 20 (filter __ (range)))
-   [0 1 2 3 4 5 6 7 8 9 11 22 33 44 55 66 77 88 99 101])  
+   [0 1 2 3 4 5 6 7 8 9 11 22 33 44 55 66 77 88 99 101])
