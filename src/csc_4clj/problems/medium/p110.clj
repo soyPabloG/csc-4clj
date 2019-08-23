@@ -10,8 +10,11 @@
 ;; Tags: seqs
 
 (def __
-  (fn []
-    ,,,))
+  (fn [coll]
+    (let [partition     (partition-by identity coll)
+          counts        (map count partition)
+          pronunciation (interleave counts (map first partition))]
+      (lazy-seq (cons pronunciation (__ pronunciation))))))
 
 
 ;;;;;;;;;;;
@@ -25,4 +28,3 @@
 (= [1 1 1 3 2 1 3 2 1 1] (nth (__ [1]) 6))
 
 (= 338 (count (nth (__ [3 2]) 15)))
-
