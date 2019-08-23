@@ -11,9 +11,17 @@
 ;;
 ;; Tags: seqs, combinatorics
 
+(def power-set
+  (fn [set]
+    (if (empty? set)
+      #{#{}}
+      (let [[s & ss] set
+            sss      (power-set ss)]
+        (clojure.set/union sss (map #(conj % s) sss))))))
+
 (def __
-  (fn []
-    ,,,))
+  (fn [n set]
+    (apply conj #{} (filter #(= n (count %)) (power-set set)))))
 
 
 ;;;;;;;;;;;
