@@ -13,9 +13,15 @@
 
 
 (def __
-  (fn []
-    ,,,))
-
+  (fn [n coll]
+    (loop [[f & r :as rem-coll]  coll
+           acc                   []
+           solution              []]
+      (println coll)
+      (cond
+        (= (count acc) n) (recur rem-coll [] (conj solution acc))
+        (nil? f) solution
+        :else (recur r (conj acc f) solution)))))
 
 ;;;;;;;;;;;
 ;; Tests ;;
