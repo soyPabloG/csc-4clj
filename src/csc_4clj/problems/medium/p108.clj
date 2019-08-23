@@ -10,8 +10,16 @@
 ;; Tags: seqs, sorting
 
 (def __
-  (fn []
-    ,,,))
+  (fn [& colls]
+    (cond
+      (some nil? colls) nil
+      (apply = (map first colls)) (ffirst colls)
+      :else
+      (let [min (first (apply min-key first colls))]
+        (recur (map #(if (= (first %) min)
+                      (drop 1 %)
+                      %)
+                    colls))))))
 
 
 ;;;;;;;;;;;
@@ -27,3 +35,7 @@
 (= 64 (__ (map #(* % % %) (range)) ;; perfect cubes
           (filter #(zero? (bit-and % (dec %))) (range)) ;; powers of 2
           (iterate inc 20))) ;; at least as large as 20
+
+(= 1024 (__ (map #(* % % % % %) (range))
+            (filter #(zero? (bit-and % (dec %))) (range))
+            (iterate inc 40)))
