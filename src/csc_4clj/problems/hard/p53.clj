@@ -9,9 +9,21 @@
 ;;
 ;; Tags: seqs
 
+(defn consecutives [coll]
+  (if-not (empty? coll)
+    (let [[f & r] coll]
+      (loop [[s & r-s] r
+             solution  (vector (vector f))]
+        (if (nil? s)
+          solution
+          (if (< 0 (- s (last (last solution))) 2)
+            (recur r-s (update solution (- (count solution) 1) #(conj % s)))
+            (recur r-s (conj solution (vector s)))))))
+    []))
+
 (def __
-  (fn []
-    ,,,))
+  (fn [coll]
+    (apply max-key count [] (filter #(> (count %) 1) (consecutives coll)))))
 
 
 ;;;;;;;;;;;
