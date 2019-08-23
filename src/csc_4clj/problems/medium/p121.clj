@@ -17,10 +17,17 @@
 ;;
 ;; Special restrictions: eval, resolve
 
+(defn eval-seq [formula variables]
+  (cond
+    (seq? formula) (let [[op & args] formula
+                         operators   {'+ + '- - '* * '/ /}]
+                     (apply (get operators op) (map #(eval-seq % variables) args)))
+    (number? formula) formula
+    :else (get variables formula)))
 
 (def __
-  (fn []
-    ,,,))
+  (fn [formula]
+    #(eval-seq formula %)))
 
 
 ;;;;;;;;;;;
@@ -43,4 +50,3 @@
 (= 1 ((__ '(/ (+ x 2)
               (* 3 (+ y 1))))
       '{x 4 y 1}))
-
