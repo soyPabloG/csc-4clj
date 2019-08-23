@@ -9,17 +9,34 @@
 ;;
 ;; Tags:
 
+;(def __
+;  (fn [coll]
+;    (map
+;      #(vector (first %) (last %))
+;      (let [last-seen (atom 0)]
+;        (partition-by
+;          #(if (<= (- % @last-seen) 1)
+;             (do (reset! last-seen %) true)
+;             (do (reset! last-seen %) false))
+;          (sort coll))))))
+
+(defn consecutives [coll]
+  (if-not (empty? coll)
+    (let [[f & r] (sort coll)]
+      (loop [[s & r-s] r
+             solution  (vector (vector f))]
+        (if (nil? s)
+          solution
+          (if (<= (- s (last (last solution))) 1)
+            (recur r-s (update solution (- (count solution) 1) #(conj % s)))
+            (recur r-s (conj solution (vector s)))))))
+    []))
+
 (def __
   (fn [coll]
     (map
       #(vector (first %) (last %))
-      (let [last-seen (atom 0)]
-        (partition-by
-          #(if (<= (- % @last-seen) 1)
-             (do (reset! last-seen %) true)
-             (do (reset! last-seen %) false))
-          (sort coll))))))
-
+      (consecutives coll))))
 
 ;;;;;;;;;;;
 ;; Tests ;;
