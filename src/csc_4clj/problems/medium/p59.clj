@@ -13,8 +13,9 @@
 
 
 (def __
-  (fn []
-    ,,,))
+  (fn [& fns]
+    (fn [& args]
+      (reduce #(conj %1 (apply %2 args)) [] fns))))
 
 
 ;;;;;;;;;;;
