@@ -9,16 +9,29 @@
 ;;
 ;; Tags: math
 
+(def power-set
+  (fn [set]
+    (if (empty? set)
+      #{#{}}
+      (let [[s & ss] set
+            sss      (power-set ss)]
+        (clojure.set/union sss (map #(conj % s) sss))))))
+
 (def __
-  (fn []
-    ,,,))
+  (fn [& sets]
+    (->> (map power-set sets)
+         (map #(map (fn [set] (when (not (empty? set)) (apply + set))) %))
+         (map set)
+         (apply clojure.set/intersection)
+         count
+         (< 1))))
 
 
 ;;;;;;;;;;;
 ;; Tests ;;
 ;;;;;;;;;;;
 
-(= true  (__ #{-1 1 99} 
+(= true  (__ #{-1 1 99}
              #{-2 2 888}
              #{-3 3 7777})) ; ex. all sets have a subset which sums to zero
 
@@ -29,8 +42,8 @@
 
 (= true  (__ #{1}))
 
-(= false (__ #{1 -3 51 9} 
-             #{0} 
+(= false (__ #{1 -3 51 9}
+             #{0}
              #{9 2 81 33}))
 
 (= true  (__ #{1 3 5}
