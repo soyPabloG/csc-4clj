@@ -11,27 +11,52 @@
 
 (def brackets-classes {\[ :square \] :square \( :round \) :round \{ :curly \} :curly})
 
+;(def __
+;  (fn [string]
+;    (loop [stack   []
+;           [f & r] string]
+;      (let [char-class (get brackets-classes f)]
+;        (cond
+;          (nil? f) (empty? stack)
+;          (= f \[) (recur (conj stack char-class) r)
+;          (= f \]) (if (= char-class (peek stack))
+;                     (recur (pop stack) r)
+;                     false)
+;          (= f \() (recur (conj stack char-class) r)
+;          (= f \)) (if (= char-class (peek stack))
+;                     (recur (pop stack) r)
+;                     false)
+;          (= f \{) (recur (conj stack char-class) r)
+;          (= f \}) (if (= char-class (peek stack))
+;                     (recur (pop stack) r)
+;                     false)
+;          :else (recur stack r))))))
+
+(def brackets-info {\[ {:class :square :type :open}
+                    \] {:class :square :type :close}
+                    \( {:class :round :type :open}
+                    \) {:class :round :type :close}
+                    \{ {:class :curly :type :open}
+                    \} {:class :curly :type :close}})
+
 (def __
   (fn [string]
     (loop [stack   []
            [f & r] string]
-      (let [char-class (get brackets-classes f)]
+      (let [char-info (get brackets-info f)]
         (cond
+          ;; Reach the end of the string.
           (nil? f) (empty? stack)
-          (= f \[) (recur (conj stack char-class) r)
-          (= f \]) (if (= char-class (peek stack))
-                     (recur (pop stack) r)
-                     false)
-          (= f \() (recur (conj stack char-class) r)
-          (= f \)) (if (= char-class (peek stack))
-                     (recur (pop stack) r)
-                     false)
-          (= f \{) (recur (conj stack char-class) r)
-          (= f \}) (if (= char-class (peek stack))
-                     (recur (pop stack) r)
-                     false)
-          :else (recur stack r))))))
 
+          ;; Current char is a bracket.
+          (some (partial = f) (keys brackets-info))
+          (cond
+            (= (:type char-info) :open) (recur (conj stack (:class char-info)) r)
+            (= (:type char-info) :close) (if (= (:class char-info) (peek stack))
+                                           (recur (pop stack) r)
+                                           false))
+
+          :else (recur stack r))))))
 
 ;;;;;;;;;;;
 ;; Tests ;;
