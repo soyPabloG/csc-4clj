@@ -10,8 +10,11 @@
 ;; Tags: seqs
 
 (def __
-  (fn []
-    ,,,))
+  (fn [n coll]
+    (let [n-coll (count coll)]
+      (take n-coll
+            (drop (mod n n-coll)
+                  (cycle coll))))))
 
 
 ;;;;;;;;;;;
