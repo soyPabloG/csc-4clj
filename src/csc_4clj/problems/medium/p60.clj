@@ -13,8 +13,12 @@
 
 
 (def __
-  (fn []
-    ,,,))
+  (fn
+    ([f coll] (__ f (first coll) (next coll)))
+    ([f init-v coll] (cons init-v
+                           (lazy-seq (when coll
+                                       (let [[next-v & r] coll]
+                                         (__ f (f init-v next-v) r))))))))
 
 
 ;;;;;;;;;;;
