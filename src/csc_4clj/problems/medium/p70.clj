@@ -10,8 +10,8 @@
 ;; Tags: sorting
 
 (def __
-  (fn []
-    ,,,))
+  (fn [string]
+    (sort-by #(clojure.string/lower-case %) (re-seq #"\w+" string))))
 
 
 ;;;;;;;;;;;
