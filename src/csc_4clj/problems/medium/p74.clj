@@ -7,12 +7,19 @@
 ;; Description:
 ;; Given a string of comma separated integers, write a function which returns a new comma separated string that only contains the numbers which are perfect squares.
 ;;
-;; Tags: 
+;; Tags:
+
+(defn perfect-square? [n]
+  (let [sqrt-n (Math/sqrt n)]
+    (= (Math/floor sqrt-n) sqrt-n)))
 
 (def __
-  (fn []
-    ,,,))
-
+  (fn [string]
+    (apply str
+           (interpose
+             ","
+             (filter #(perfect-square? (Integer/parseInt %))
+                     (re-seq #"\d+" string))))))
 
 ;;;;;;;;;;;
 ;; Tests ;;
